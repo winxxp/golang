@@ -2,7 +2,7 @@ FROM buildpack-deps:jessie-scm
 
 # gcc for cgo
 RUN apt-get update && apt-get install -y \
-		gcc libc6-dev make \
+		gcc libc6-dev make vim git\
 		--no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -18,6 +18,11 @@ ENV PATH /usr/src/go/bin:$PATH
 RUN mkdir -p /go/src /go/bin && chmod -R 777 /go
 ENV GOPATH /go
 ENV PATH /go/bin:$PATH
+
+RUN git https://github.com/winxxp/gator
+RUN go build gator
+
 WORKDIR /go
 
 COPY go-wrapper /usr/local/bin/
+CMD ["sh", "-c", "/root/gator/gator"]
